@@ -10,7 +10,7 @@ then
     cp "${template_env}"  "${main_env}"
 fi
 
-docker compose -f docker/docker-compose.yml up --build 
-alembic -c alembic.ini upgrade head && alembic -c alembic.ini stamp head
+docker compose -f docker/docker-compose.yml up --build -d
+alembic -c app/alembic.ini upgrade head && python app/main.py
 docker compose -f docker/docker-compose.yml down
 exit
