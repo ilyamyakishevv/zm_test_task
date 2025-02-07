@@ -1,0 +1,40 @@
+version: '3.9'
+
+services:
+  task-service:
+      build:
+        context: ..
+        dockerfile: docker/Dockerfile
+      container_name: task-service
+      environment:
+        - SERVICE_PORT=8000
+        - ENVIRONMENT=local
+      ports:
+        - "8000:8000"
+      networks:
+        - backend
+      depends_on:
+        - postgres
+    
+  postgres:
+    image: postgres:12.16-alpine3.18
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  
